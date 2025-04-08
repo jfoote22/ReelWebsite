@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import BackgroundSlider from "@/components/background-slider"
 import VideoPlayer from "@/components/video-player"
 import PDFModal from "@/components/pdf-modal"
+import VideoCarousel from "@/components/VideoCarousel"
 
 export default function Home() {
   const [isPDFModalOpen, setIsPDFModalOpen] = useState(false)
@@ -89,12 +90,7 @@ export default function Home() {
 
           {/* Older Reels */}
           <div className="mb-24">
-            <h2 className="text-2xl font-light mb-6 tracking-wide">PREVIOUS WORK</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <VideoPlayer title="2022 Animation Reel" />
-              <VideoPlayer title="2020 Compositing Reel" />
-              <VideoPlayer title="2018 Motion Graphics" />
-            </div>
+            <VideoCarousel />
           </div>
 
           {/* About Section */}

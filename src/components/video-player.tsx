@@ -40,7 +40,7 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
 
   return (
     <div className="relative overflow-hidden rounded-md group">
-      <div className={`bg-zinc-900 relative ${featured ? "aspect-video" : "aspect-video"}`}>
+      <div className={`bg-zinc-900 relative ${featured ? "aspect-video" : "aspect-video"} border border-gray-500/20 shadow-[inset_0_0_1px_rgba(255,255,255,0.1)] animate-[shimmer_3s_ease-in-out_infinite]`}>
         {videoSrc ? (
           <video
             ref={videoRef}
@@ -88,9 +88,6 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
             </Button>
           </div>
         </div>
-      </div>
-      <div className="p-3">
-        <h3 className={`${featured ? "text-xl" : "text-lg"} font-light tracking-wide`}>{title}</h3>
       </div>
     </div>
   )
