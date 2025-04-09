@@ -5,18 +5,18 @@ import Image from "next/image"
 
 // Project carousel images - using all images from the img directory
 const projectImages = [
-  "/img/mea-carousel.jpg",
-  "/img/mea-carousel2.jpg",
+  "/img/vfx-carousel.jpg",
+  "/img/d2-carousel.jpg",
   "/img/mea-carousel3.jpg",
   "/img/dai-carousel.jpg",
   "/img/dai-carousel2.jpg",
-  "/img/cod-carousel.jpg",
-  "/img/wtwta-carousel.jpg",
   "/img/swtor-carousel.jpg",
+  "/img/wtwta-carousel.jpg",
   "/img/shrek-carousel.jpg",
-  "/img/vfx-carousel.jpg",
+  "/img/cod-carousel.jpg",
+  "/img/mea-carousel2.jpg",
   "/img/mhl-carousel.jpg",
-  "/img/d2-carousel.jpg"
+  "/img/mea-carousel.jpg"
 ]
 
 export default function BackgroundSlider() {

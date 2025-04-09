@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react"
 import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
+import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 
@@ -42,14 +43,26 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
     <div className="relative overflow-hidden rounded-md group">
       <div className={`bg-zinc-900 relative ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
         {videoSrc ? (
-          <video
-            ref={videoRef}
-            src={videoSrc}
-            className="w-full h-full object-cover rounded-[4px]"
-            loop
-            muted
-            playsInline
-          />
+          <>
+            <div className={`absolute inset-0 transition-opacity duration-500 ${isPlaying ? 'opacity-0' : 'opacity-100'} flex items-center justify-center`}>
+              <div className="relative w-[80%] h-[80%]">
+                <Image
+                  src="/img/latest-logo.jpg"
+                  alt="Latest Work Thumbnail"
+                  fill
+                  className="object-contain rounded-[4px]"
+                />
+              </div>
+            </div>
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              className="w-full h-full object-cover rounded-[4px]"
+              loop
+              muted
+              playsInline
+            />
+          </>
         ) : (
           <div className="w-full h-full bg-zinc-800" />
         )}

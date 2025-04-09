@@ -105,7 +105,7 @@ const VideoCarousel = () => {
       className="w-full py-12 cursor-pointer"
       onClick={toggleView}
     >
-      <h2 className="text-4xl font-bold text-white mb-8 px-8">PREVIOUS WORK</h2>
+      <h2 className="text-2xl font-light tracking-wide mb-6">PREVIOUS WORK</h2>
       <div 
         ref={containerRef}
         className={`relative w-full ${isVerticalView ? '' : 'overflow-x-hidden'}`}

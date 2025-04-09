@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { Menu } from "lucide-react"
+import { Menu, Mail, Phone, Linkedin } from "lucide-react"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,7 @@ import BackgroundSlider from "@/components/background-slider"
 import VideoPlayer from "@/components/video-player"
 import PDFModal from "@/components/pdf-modal"
 import VideoCarousel from "@/components/VideoCarousel"
+import PDFEmbed from "@/components/pdf-embed"
 
 export default function Home() {
   const [isPDFModalOpen, setIsPDFModalOpen] = useState(false)
@@ -17,10 +18,10 @@ export default function Home() {
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
       <BackgroundSlider />
 
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-light tracking-wider">
-            JUSTIN FOOTE - VFX ARTIST
+            JUSTIN FOOTE - TECHNICAL VFX ARTIST - 21 YEARS OF EXPERIENCE
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -99,34 +100,23 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div>
                 <img
-                  src="/placeholder.svg?height=600&width=600"
-                  alt="VFX Artist Portrait"
+                  src="/images/profile_pic.jpg"
+                  alt="Justin Foote - VFX Artist"
                   className="w-full rounded-md"
                 />
               </div>
-              <div className="space-y-6 text-gray-300">
+              <div className="space-y-6 text-gray-300 bg-black/80 p-8 rounded-lg">
                 <p className="text-lg">
-                  For the past 21 years, I've been crafting visual stories through the art of visual effects. My journey
-                  began in 2003 when I first discovered the magic of digital compositing.
+                  I'm a Visual Effects Artist with 21 years of experience in the video game industry, passionate about creating immersive VFX and I've been fortunate to have contributed to a wide range of high-profile projects alongside some of the industry's most talented teams.
                 </p>
                 <p className="text-lg">
-                  Starting as a rotoscope artist at a small studio in Los Angeles, I quickly developed a passion for
-                  bringing impossible worlds to life. By 2007, I had moved into more complex compositing work,
-                  contributing to several independent films that gained recognition at festivals around the country.
+                  I began my career at Amaze Entertainment, working on Call of Duty: Roads to Victory for PSP, followed by Shrek the Third and Where the Wild Things Are for the XBox.  I then joined BioWare Austin to work on Star Wars: The Old Republic, contributing to multiple areas including VFX, sky scenes, and microtransaction asset creation.  I later supported titles like Dragon Age: Inquisition (IGN's 2014 Game of the Year), its DLC The Descent, and Mass Effect: Andromeda.
                 </p>
                 <p className="text-lg">
-                  The 2010s saw me expand into 3D animation and simulation, working with major studios on blockbuster
-                  films. I've been fortunate to contribute to projects that have won technical achievement awards and
-                  have been recognized for their groundbreaking visual effects.
+                  Seeking new challenges, I joined Microsoft to develop for the cutting-edge HoloLens platform, gaining hands-on experience with AR technologies. I later joined Bungie, achieving a major career milestone, working on Destiny 2 and the DLC Curse of Osiris before transitioning to State Street as VP of AR/VR Technologies. There, I was part of a world-class research team exploring advanced AR/VR, cloud infrastructure, and machine learning.
                 </p>
                 <p className="text-lg">
-                  Today, I split my time between high-end commercial work and personal artistic projects that push the
-                  boundaries of what's possible with modern VFX tools. My approach combines technical precision with
-                  artistic sensibility, always in service of the story being told.
-                </p>
-                <p className="text-lg">
-                  When I'm not in front of a computer, you'll find me photographing landscapes, studying film, or
-                  mentoring the next generation of VFX artists.
+                  I'm driven by curiosity, innovation, and a love for creating impactful visual experiences.
                 </p>
               </div>
             </div>
@@ -138,25 +128,29 @@ export default function Home() {
             <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
               Interested in collaboration? Let's create something amazing together.
             </p>
-            <div className="flex justify-center gap-8">
-              <a href="mailto:contact@johndoe.com" className="text-white hover:text-gray-300 transition-colors">
-                contact@johndoe.com
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+              <a 
+                href="mailto:justinfoote@gmail.com" 
+                className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
+              >
+                <Mail className="h-5 w-5" />
+                justinfoote@gmail.com
               </a>
               <a
-                href="https://vimeo.com"
+                href="https://www.linkedin.com/in/justin-foote-26820113/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-gray-300 transition-colors"
+                className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
               >
-                Vimeo
+                <Linkedin className="h-5 w-5" />
+                LinkedIn
               </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-gray-300 transition-colors"
+              <a 
+                href="tel:206-334-8792"
+                className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
               >
-                Instagram
+                <Phone className="h-5 w-5" />
+                206-334-8792
               </a>
             </div>
           </section>
@@ -166,7 +160,7 @@ export default function Home() {
       <footer className="py-6 border-t border-gray-800/30 relative z-10">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 text-sm">© {new Date().getFullYear()} John Doe. All rights reserved.</p>
+            <p className="text-gray-500 text-sm">© {new Date().getFullYear()} Justin Foote. All rights reserved.</p>
           </div>
         </div>
       </footer>
