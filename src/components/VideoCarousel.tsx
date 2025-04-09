@@ -116,10 +116,10 @@ const VideoCarousel = () => {
           {videos.map((video, index) => (
             <div 
               key={index} 
-              className={`${isVerticalView ? 'w-full h-[600px] transition-all duration-500' : 'min-w-[600px] h-[337px]'} bg-gray-900 rounded-lg overflow-hidden`}
+              className={`${isVerticalView ? 'w-full h-[600px] transition-all duration-500' : 'min-w-[600px] h-[337px]'} bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]`}
             >
               <video
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
                 autoPlay={true}
@@ -133,10 +133,10 @@ const VideoCarousel = () => {
           {!isVerticalView && videos.slice(0, 2).map((video, index) => (
             <div 
               key={`duplicate-${index}`} 
-              className="min-w-[600px] h-[337px] bg-gray-900 rounded-lg overflow-hidden"
+              className="min-w-[600px] h-[337px] bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
             >
               <video
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
                 autoPlay={true}

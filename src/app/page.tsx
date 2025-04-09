@@ -76,7 +76,7 @@ export default function Home() {
 
       <PDFModal isOpen={isPDFModalOpen} onClose={() => setIsPDFModalOpen(false)} />
 
-      <main className="pt-[50vh] pb-16 relative z-10">
+      <main className="pt-[calc(50vh+396px)] pb-16 relative z-10">
         <section id="reels" className="container mx-auto px-4 md:px-6">
           {/* Featured Reel */}
           <div className="mb-16">

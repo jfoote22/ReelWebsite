@@ -72,12 +72,12 @@ export default function BackgroundSlider() {
 
   return (
     <div className="fixed inset-0 z-0 bg-black overflow-hidden">
-      <div className="absolute inset-0 flex items-start justify-center pt-16">
+      <div className="absolute inset-0 flex items-center justify-center py-[50px]">
         <div 
-          className="w-[85%] h-[40%] relative transition-all duration-100 ease-out"
+          className="w-[85%] h-[60%] relative transition-all duration-100 ease-out"
           style={{ 
             transform: `scale(${scale}) translateY(${translateY}px)`,
-            transformOrigin: 'center top',
+            transformOrigin: 'center center',
             opacity: containerOpacity
           }}
         >
