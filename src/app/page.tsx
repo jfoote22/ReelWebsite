@@ -1,5 +1,6 @@
 "use client"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, Mail, Phone, Linkedin } from "lucide-react"
 import { useState } from "react"
 
@@ -97,26 +98,31 @@ export default function Home() {
           {/* About Section */}
           <section id="about" className="mb-24">
             <h2 className="text-2xl font-light mb-8 tracking-wide">ABOUT</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              <div>
-                <img
-                  src="/images/profile_pic.jpg"
-                  alt="Justin Foote - VFX Artist"
-                  className="w-full rounded-md"
-                />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="lg:sticky lg:top-24">
+                <div className="relative w-full aspect-[4/3]">
+                  <Image
+                    src="/images/profile_pic.jpg"
+                    alt="Justin Foote - VFX Artist"
+                    fill
+                    className="rounded-lg shadow-xl object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                  />
+                </div>
               </div>
-              <div className="space-y-6 text-gray-300 bg-black/80 p-8 rounded-lg">
-                <p className="text-lg">
-                  I'm a Visual Effects Artist with 21 years of experience in the video game industry, passionate about creating immersive VFX and I've been fortunate to have contributed to a wide range of high-profile projects alongside some of the industry's most talented teams.
+              <div className="space-y-6">
+                <p className="text-lg leading-relaxed">
+                  I&apos;m a Visual Effects Artist with 21 years of experience in the video game industry, passionate about creating immersive VFX and I&apos;ve been fortunate to have contributed to a wide range of high-profile projects alongside some of the industry&apos;s most talented teams.
                 </p>
-                <p className="text-lg">
-                  I began my career at Amaze Entertainment, working on Call of Duty: Roads to Victory for PSP, followed by Shrek the Third and Where the Wild Things Are for the XBox.  I then joined BioWare Austin to work on Star Wars: The Old Republic, contributing to multiple areas including VFX, sky scenes, and microtransaction asset creation.  I later supported titles like Dragon Age: Inquisition (IGN's 2014 Game of the Year), its DLC The Descent, and Mass Effect: Andromeda.
+                <p className="text-lg leading-relaxed">
+                  I began my career at Amaze Entertainment, working on Call of Duty: Roads to Victory for PSP, followed by Shrek the Third and Where the Wild Things Are for the XBox. I then joined BioWare Austin to work on Star Wars: The Old Republic, contributing to multiple areas including VFX, sky scenes, and microtransaction asset creation. I later supported titles like Dragon Age: Inquisition (IGN&apos;s 2014 Game of the Year), its DLC The Descent, and Mass Effect: Andromeda.
                 </p>
-                <p className="text-lg">
+                <p className="text-lg leading-relaxed">
                   Seeking new challenges, I joined Microsoft to develop for the cutting-edge HoloLens platform, gaining hands-on experience with AR technologies. I later joined Bungie, achieving a major career milestone, working on Destiny 2 and the DLC Curse of Osiris before transitioning to State Street as VP of AR/VR Technologies. There, I was part of a world-class research team exploring advanced AR/VR, cloud infrastructure, and machine learning.
                 </p>
-                <p className="text-lg">
-                  I'm driven by curiosity, innovation, and a love for creating impactful visual experiences.
+                <p className="text-lg leading-relaxed">
+                  I&apos;m driven by curiosity, innovation, and a love for creating impactful visual experiences.
                 </p>
               </div>
             </div>
@@ -126,7 +132,7 @@ export default function Home() {
           <section id="contact" className="text-center">
             <h2 className="text-2xl font-light mb-6 tracking-wide">CONTACT</h2>
             <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              Interested in collaboration? Let's create something amazing together.
+              Interested in collaboration? Let&apos;s create something amazing together.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-8">
               <a 

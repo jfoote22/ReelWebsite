@@ -2,7 +2,7 @@
 
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { X, Download } from "lucide-react"
 
 interface PDFModalProps {
   isOpen: boolean
@@ -12,16 +12,30 @@ interface PDFModalProps {
 export default function PDFModal({ isOpen, onClose }: PDFModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[90vh] bg-white">
+      <DialogContent className="w-[calc(90vh*0.707)] max-w-3xl h-[90vh] bg-black border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md p-0 overflow-hidden">
         <div className="relative w-full h-full">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 right-2"
-            onClick={onClose}
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="absolute top-2 right-8 z-10 flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:text-gray-300 bg-black/80 backdrop-blur-sm"
+              asChild
+            >
+              <a href="/resume/JUSTIN_FOOTE_Resume.pdf" download>
+                <Download className="h-4 w-4" />
+                <span className="sr-only">Download Resume</span>
+              </a>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:text-gray-300 bg-black/80 backdrop-blur-sm"
+              onClick={onClose}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
           <iframe
             src="/resume/JUSTIN_FOOTE_Resume.pdf#toolbar=0"
             className="w-full h-full"
