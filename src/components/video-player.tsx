@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
 import Image from "next/image"
 
@@ -14,32 +14,7 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ title, featured = false, videoSrc }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    if (videoRef.current) {
-      const video = videoRef.current
-      
-      const handleCanPlay = () => {
-        setIsLoading(false)
-      }
-      
-      const handleError = () => {
-        setError("Failed to load video")
-        setIsLoading(false)
-      }
-      
-      video.addEventListener('canplay', handleCanPlay)
-      video.addEventListener('error', handleError)
-      
-      return () => {
-        video.removeEventListener('canplay', handleCanPlay)
-        video.removeEventListener('error', handleError)
-      }
-    }
-  }, [])
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -69,16 +44,6 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
       <div className={`bg-zinc-900 relative ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
         {videoSrc ? (
           <>
-            {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
-            {error && (
-              <div className="absolute inset-0 flex items-center justify-center text-white">
-                {error}
-              </div>
-            )}
             <video
               ref={videoRef}
               src={videoSrc}
@@ -87,7 +52,6 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               muted
               playsInline
               autoPlay={featured}
-              preload="metadata"
             />
           </>
         ) : (

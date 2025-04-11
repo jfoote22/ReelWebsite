@@ -28,32 +28,8 @@ const videos = [
 const VideoCarousel = () => {
   const [isVerticalView, setIsVerticalView] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [visibleVideos, setVisibleVideos] = useState(3); // Start with fewer videos
   const containerRef = useRef<HTMLDivElement>(null);
   const [thumbnailsGenerated, setThumbnailsGenerated] = useState(false);
-  const [loadedVideos, setLoadedVideos] = useState<Set<string>>(new Set());
-
-  // Intersection Observer for lazy loading
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const videoSrc = entry.target.getAttribute('data-src');
-            if (videoSrc) {
-              setLoadedVideos((prev) => new Set([...prev, videoSrc]));
-            }
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const videoElements = document.querySelectorAll('[data-src]');
-    videoElements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     // Function to generate thumbnails
@@ -142,25 +118,15 @@ const VideoCarousel = () => {
               key={index} 
               className={`${isVerticalView ? 'w-full h-[600px] transition-all duration-500' : 'min-w-[600px] h-[337px]'} bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]`}
             >
-              {loadedVideos.has(video.src) ? (
-                <video
-                  className="w-full h-full object-cover rounded-[4px]"
-                  src={video.src}
-                  poster={video.thumbnail}
-                  autoPlay={true}
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                />
-              ) : (
-                <div
-                  data-src={video.src}
-                  className="w-full h-full bg-gray-800 flex items-center justify-center"
-                >
-                  <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-                </div>
-              )}
+              <video
+                className="w-full h-full object-cover rounded-[4px]"
+                src={video.src}
+                poster={video.thumbnail}
+                autoPlay={true}
+                loop
+                muted
+                playsInline
+              />
             </div>
           ))}
           {/* Duplicate videos for seamless loop - only show in horizontal mode */}
@@ -169,25 +135,15 @@ const VideoCarousel = () => {
               key={`duplicate-${index}`} 
               className="min-w-[600px] h-[337px] bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
             >
-              {loadedVideos.has(video.src) ? (
-                <video
-                  className="w-full h-full object-cover rounded-[4px]"
-                  src={video.src}
-                  poster={video.thumbnail}
-                  autoPlay={true}
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                />
-              ) : (
-                <div
-                  data-src={video.src}
-                  className="w-full h-full bg-gray-800 flex items-center justify-center"
-                >
-                  <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-                </div>
-              )}
+              <video
+                className="w-full h-full object-cover rounded-[4px]"
+                src={video.src}
+                poster={video.thumbnail}
+                autoPlay={true}
+                loop
+                muted
+                playsInline
+              />
             </div>
           ))}
         </div>
