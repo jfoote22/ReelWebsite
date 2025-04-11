@@ -34,12 +34,6 @@ export default function Home() {
             >
               Resume
             </Button>
-            <Link href="#reels" className="hover:text-gray-300 transition-colors">
-              Reels
-            </Link>
-            <Link href="#about" className="hover:text-gray-300 transition-colors">
-              About
-            </Link>
             <Link href="#contact" className="hover:text-gray-300 transition-colors">
               Contact
             </Link>
@@ -61,12 +55,6 @@ export default function Home() {
                 >
                   Resume
                 </Button>
-                <Link href="#reels" className="text-xl hover:text-gray-300 transition-colors">
-                  Reels
-                </Link>
-                <Link href="#about" className="text-xl hover:text-gray-300 transition-colors">
-                  About
-                </Link>
                 <Link href="#contact" className="text-xl hover:text-gray-300 transition-colors">
                   Contact
                 </Link>

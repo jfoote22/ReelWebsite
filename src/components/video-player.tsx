@@ -44,16 +44,6 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
       <div className={`bg-zinc-900 relative ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
         {videoSrc ? (
           <>
-            <div className={`absolute inset-0 transition-opacity duration-500 ${isPlaying ? 'opacity-0' : 'opacity-100'} flex items-center justify-center`}>
-              <div className="relative w-[80%] h-[80%]">
-                <Image
-                  src="/img/latest-logo.jpg"
-                  alt="Latest Work Thumbnail"
-                  fill
-                  className="object-contain rounded-[4px]"
-                />
-              </div>
-            </div>
             <video
               ref={videoRef}
               src={videoSrc}
@@ -61,6 +51,7 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               loop
               muted
               playsInline
+              autoPlay={featured}
             />
           </>
         ) : (
