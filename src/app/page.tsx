@@ -22,7 +22,9 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-light tracking-wider">
-            JUSTIN FOOTE - TECHNICAL VFX ARTIST - 21 YEARS OF EXPERIENCE
+            JUSTIN FOOTE<br />
+            TECHNICAL VFX ARTIST<br />
+            21 YEARS OF EXPERIENCE
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
