@@ -52,14 +52,24 @@ export default function BackgroundSlider() {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
       const windowHeight = window.innerHeight
+      const windowWidth = window.innerWidth
       const halfwayPoint = windowHeight / 2
       
       // Calculate scale, position, and opacity based on scroll position
       if (scrollPosition <= halfwayPoint) {
         const progress = scrollPosition / halfwayPoint
-        const newScale = 1 + (progress * 0.5)
-        const newTranslateY = progress * 150
-        const newOpacity = 1 - (progress * 0.7) // This will go from 1 to 0.3
+        // Calculate scale needed to fit within viewport
+        const containerWidth = windowWidth * (windowWidth < 768 ? 0.8 : 0.6)
+        const containerHeight = windowHeight * (windowWidth < 768 ? 0.5 : 0.4)
+        
+        // Calculate the maximum scale that keeps the image within viewport bounds
+        const scaleToFitWidth = windowWidth / containerWidth
+        const scaleToFitHeight = windowHeight / containerHeight
+        const maxScale = Math.min(scaleToFitWidth, scaleToFitHeight) // Use min instead of max to ensure it fits
+        
+        const newScale = 1 + (progress * (maxScale - 1))
+        const newTranslateY = progress * (windowWidth < 768 ? 100 : 150)
+        const newOpacity = 1 - (progress * 0.7)
         setScale(newScale)
         setTranslateY(newTranslateY)
         setContainerOpacity(newOpacity)
@@ -67,14 +77,18 @@ export default function BackgroundSlider() {
     }
 
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('resize', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+    }
   }, [])
 
   return (
     <div className="fixed inset-0 z-0 bg-black overflow-hidden">
-      <div className="absolute inset-0 flex items-center justify-center py-[50px]">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div 
-          className="w-[85%] h-[60%] relative transition-all duration-100 ease-out"
+          className="w-[60%] h-[40%] md:w-[60%] md:h-[40%] sm:w-[80%] sm:h-[50%] relative transition-all duration-100 ease-out"
           style={{ 
             transform: `scale(${scale}) translateY(${translateY}px)`,
             transformOrigin: 'center center',
@@ -105,8 +119,8 @@ export default function BackgroundSlider() {
                 alt={`Project background ${index + 1}`}
                 fill
                 priority={index === 0}
-                className="object-cover"
-                sizes="100vw"
+                className="object-contain rounded-md"
+                sizes="(max-width: 768px) 80vw, 60vw"
               />
             </div>
           ))}
