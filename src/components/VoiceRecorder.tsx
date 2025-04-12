@@ -1,58 +1,63 @@
-'use client';
+"use client"
 
-import { useState, useEffect } from 'react';
-import { useDeepgram } from '../lib/contexts/DeepgramContext';
-import { addDocument } from '../lib/firebase/firebaseUtils';
-import { motion } from 'framer-motion';
+import { useState, useRef } from "react"
+import { Mic, Square } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useDeepgram } from "@/lib/contexts/DeepgramContext"
 
 export default function VoiceRecorder() {
-  const [isRecording, setIsRecording] = useState(false);
-  const { connectToDeepgram, disconnectFromDeepgram, connectionState, realtimeTranscript } = useDeepgram();
+  const [isRecording, setIsRecording] = useState(false)
+  const [transcription, setTranscription] = useState("")
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const { transcribeAudio } = useDeepgram()
 
-  const handleStartRecording = async () => {
-    await connectToDeepgram();
-    setIsRecording(true);
-  };
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      const audioChunks: Blob[] = []
 
-  const handleStopRecording = async () => {
-    disconnectFromDeepgram();
-    setIsRecording(false);
-    
-    // Save the note to Firebase
-    if (realtimeTranscript) {
-      await addDocument('notes', {
-        text: realtimeTranscript,
-        timestamp: new Date().toISOString(),
-      });
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data)
+      }
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
+        const transcription = await transcribeAudio(audioBlob)
+        setTranscription(transcription)
+      }
+
+      mediaRecorder.start()
+      setIsRecording(true)
+    } catch (error) {
+      console.error("Error accessing microphone:", error)
     }
-  };
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop()
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop())
+      setIsRecording(false)
+    }
+  }
 
   return (
-    <div className="w-full max-w-md">
-      <button
-        onClick={isRecording ? handleStopRecording : handleStartRecording}
-        className={`w-full py-2 px-4 rounded-full ${
-          isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
-        } text-white font-bold`}
+    <div className="flex flex-col items-center gap-4">
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={isRecording ? stopRecording : startRecording}
+        className={`rounded-full border-2 ${
+          isRecording ? "border-red-500 text-red-500" : "border-white text-white"
+        }`}
       >
-        {isRecording ? 'Stop Recording' : 'Start Recording'}
-      </button>
-      {isRecording && (
-        <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="w-8 h-8 bg-blue-500 rounded-full mx-auto mb-4"
-          />
-          <p className="text-sm text-gray-600">{realtimeTranscript}</p>
-        </div>
+        {isRecording ? <Square className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+      </Button>
+      {transcription && (
+        <p className="text-white text-center max-w-md">{transcription}</p>
       )}
     </div>
-  );
+  )
 }
