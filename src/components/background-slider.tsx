@@ -80,7 +80,7 @@ export default function BackgroundSlider() {
 
   return (
     <div className="fixed inset-0 z-0 bg-black overflow-hidden">
-      <div className="absolute inset-0 flex items-start justify-center pt-8">
+      <div className="absolute inset-0 flex items-start justify-center pt-[58px]">
         <div 
           className="w-[90%] md:w-[60%] aspect-video relative transition-all duration-100 ease-out"
           style={{ 
