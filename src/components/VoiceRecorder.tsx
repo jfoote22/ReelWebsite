@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useDeepgram } from '../lib/contexts/DeepgramContext';
+import { addDocument } from '../lib/firebase/firebaseUtils';
 import { motion } from 'framer-motion';
 
 export default function VoiceRecorder() {
@@ -16,6 +17,14 @@ export default function VoiceRecorder() {
   const handleStopRecording = async () => {
     disconnectFromDeepgram();
     setIsRecording(false);
+    
+    // Save the note to Firebase
+    if (realtimeTranscript) {
+      await addDocument('notes', {
+        text: realtimeTranscript,
+        timestamp: new Date().toISOString(),
+      });
+    }
   };
 
   return (

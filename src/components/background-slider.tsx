@@ -58,18 +58,16 @@ export default function BackgroundSlider() {
       // Calculate scale, position, and opacity based on scroll position
       if (scrollPosition <= halfwayPoint) {
         const progress = scrollPosition / halfwayPoint
-        // Calculate scale needed to fit within viewport
-        const containerWidth = windowWidth * (windowWidth < 768 ? 0.8 : 0.6)
-        const containerHeight = windowHeight * (windowWidth < 768 ? 0.5 : 0.4)
+        // Calculate scale needed to fill the viewport
+        const containerWidth = windowWidth * 0.6 // Current width (60% of viewport)
+        const containerHeight = windowHeight * 0.4 // Current height (40% of viewport)
+        const scaleToFillWidth = windowWidth / containerWidth
+        const scaleToFillHeight = windowHeight / containerHeight
+        const maxScale = Math.max(scaleToFillWidth, scaleToFillHeight)
         
-        // Calculate the maximum scale that keeps the image within viewport bounds
-        const scaleToFitWidth = windowWidth / containerWidth
-        const scaleToFitHeight = windowHeight / containerHeight
-        const maxScale = Math.min(scaleToFitWidth, scaleToFitHeight) // Use min instead of max to ensure it fits
-        
-        const newScale = 1 + (progress * (maxScale - 1))
-        const newTranslateY = progress * (windowWidth < 768 ? 100 : 150)
-        const newOpacity = 1 - (progress * 0.7)
+        const newScale = 1 + (progress * (maxScale - 1)) // Scale from 1 to maxScale
+        const newTranslateY = progress * 150
+        const newOpacity = 1 - (progress * 0.7) // This will go from 1 to 0.3
         setScale(newScale)
         setTranslateY(newTranslateY)
         setContainerOpacity(newOpacity)
@@ -77,18 +75,14 @@ export default function BackgroundSlider() {
     }
 
     window.addEventListener('scroll', handleScroll)
-    window.addEventListener('resize', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <div className="fixed inset-0 z-0 bg-black overflow-hidden">
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-start justify-center pt-8">
         <div 
-          className="w-[60%] h-[40%] md:w-[60%] md:h-[40%] sm:w-[80%] sm:h-[50%] relative transition-all duration-100 ease-out"
+          className="w-[90%] md:w-[60%] aspect-video relative transition-all duration-100 ease-out"
           style={{ 
             transform: `scale(${scale}) translateY(${translateY}px)`,
             transformOrigin: 'center center',
@@ -120,7 +114,7 @@ export default function BackgroundSlider() {
                 fill
                 priority={index === 0}
                 className="object-contain rounded-md"
-                sizes="(max-width: 768px) 80vw, 60vw"
+                sizes="(max-width: 768px) 90vw, 60vw"
               />
             </div>
           ))}

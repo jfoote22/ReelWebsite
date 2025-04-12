@@ -21,10 +21,10 @@ export default function Home() {
 
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-light tracking-wider">
-            JUSTIN FOOTE<br />
-            TECHNICAL VFX ARTIST<br />
-            21 YEARS OF EXPERIENCE
+          <Link href="/" className="flex flex-col text-2xl font-light tracking-wider">
+            <span>JUSTIN FOOTE</span>
+            <span>TECHNICAL VFX ARTIST</span>
+            <span>21 YEARS OF EXPERIENCE</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -68,10 +68,10 @@ export default function Home() {
 
       <PDFModal isOpen={isPDFModalOpen} onClose={() => setIsPDFModalOpen(false)} />
 
-      <main className="pt-[calc(50vh+396px)] pb-16 relative z-10">
+      <main className="pt-[calc(25vh+200px)] pb-16 relative z-10">
         <section id="reels" className="container mx-auto px-4 md:px-6">
           {/* Featured Reel */}
-          <div className="mb-16">
+          <div className="mb-12">
             <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST WORK</h2>
             <VideoPlayer 
               title="2016 VFX Demo Reel" 
@@ -81,12 +81,12 @@ export default function Home() {
           </div>
 
           {/* Older Reels */}
-          <div className="mb-24">
+          <div className="mb-16">
             <VideoCarousel />
           </div>
 
           {/* About Section */}
-          <section id="about" className="mb-24">
+          <section id="about" className="mb-16">
             <h2 className="text-2xl font-light mb-8 tracking-wide">ABOUT</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="lg:sticky lg:top-24">
