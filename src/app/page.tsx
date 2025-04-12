@@ -19,12 +19,11 @@ export default function Home() {
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
       <BackgroundSlider />
 
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-6 bg-black">
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex flex-col text-2xl font-light tracking-wider">
             <span>JUSTIN FOOTE</span>
             <span>TECHNICAL VFX ARTIST</span>
-            <span>21 YEARS OF EXPERIENCE</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
