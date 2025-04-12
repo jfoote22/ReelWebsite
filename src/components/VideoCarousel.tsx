@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 const videos = [
   {
@@ -28,7 +30,9 @@ const videos = [
 const VideoCarousel = () => {
   const [isVerticalView, setIsVerticalView] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [playingStates, setPlayingStates] = useState<boolean[]>(new Array(videos.length).fill(true));
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [thumbnailsGenerated, setThumbnailsGenerated] = useState(false);
 
   useEffect(() => {
@@ -96,47 +100,221 @@ const VideoCarousel = () => {
     return () => clearInterval(intervalId);
   }, [isVerticalView, isHovered]);
 
+  // Add click outside handler
+  useEffect(() => {
+    if (!isVerticalView) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsVerticalView(false);
+        // Keep videos playing when collapsing
+        videoRefs.current.forEach((video, index) => {
+          if (video) {
+            video.play().catch(() => {
+              setPlayingStates(prev => {
+                const newStates = [...prev];
+                newStates[index] = false;
+                return newStates;
+              });
+            });
+          }
+        });
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isVerticalView]);
+
   const toggleView = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the click from bubbling to document
     setIsVerticalView(!isVerticalView);
+    // Keep videos playing when switching views
+    videoRefs.current.forEach((video, index) => {
+      if (video) {
+        video.play().catch(() => {
+          setPlayingStates(prev => {
+            const newStates = [...prev];
+            newStates[index] = false;
+            return newStates;
+          });
+        });
+      }
+    });
   };
+
+  const togglePlay = (index: number) => {
+    const video = videoRefs.current[index];
+    if (video) {
+      if (playingStates[index]) {
+        video.pause();
+      } else {
+        video.play().catch(() => {
+          setPlayingStates(prev => {
+            const newStates = [...prev];
+            newStates[index] = false;
+            return newStates;
+          });
+        });
+      }
+    }
+  };
+
+  const rewindTenSeconds = (index: number) => {
+    const video = videoRefs.current[index];
+    if (video) {
+      video.currentTime = Math.max(0, video.currentTime - 10);
+    }
+  };
+
+  const restartVideo = (index: number) => {
+    const video = videoRefs.current[index];
+    if (video) {
+      video.currentTime = 0;
+    }
+  };
+
+  useEffect(() => {
+    // Add event listeners for each video
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+
+      const handlePlay = () => {
+        setPlayingStates(prev => {
+          const newStates = [...prev];
+          newStates[index] = true;
+          return newStates;
+        });
+      };
+
+      const handlePause = () => {
+        setPlayingStates(prev => {
+          const newStates = [...prev];
+          newStates[index] = false;
+          return newStates;
+        });
+      };
+
+      video.addEventListener('play', handlePlay);
+      video.addEventListener('pause', handlePause);
+
+      return () => {
+        video.removeEventListener('play', handlePlay);
+        video.removeEventListener('pause', handlePause);
+      };
+    });
+  }, [isVerticalView]); // Re-run when view changes
 
   return (
     <section 
-      className="w-full py-12 cursor-pointer"
-      onClick={toggleView}
+      className="w-full py-6 sm:py-12"
     >
-      <h2 className="text-2xl font-light tracking-wide mb-6">PREVIOUS WORK</h2>
+      <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">PREVIOUS WORK</h2>
       <div 
         ref={containerRef}
         className={`relative w-full ${isVerticalView ? '' : 'overflow-x-hidden'}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className={`${isVerticalView ? 'flex flex-col gap-8 px-8' : 'flex gap-4 px-8'}`}>
+        <div 
+          className={`${isVerticalView ? 'flex flex-col gap-4 sm:gap-8 px-4 sm:px-8' : 'flex gap-2 sm:gap-4 px-4 sm:px-8'}`}
+          onClick={(e) => {
+            if (!isVerticalView) {
+              e.stopPropagation();
+              setIsVerticalView(true);
+              // Keep videos playing when expanding
+              videoRefs.current.forEach((video, index) => {
+                if (video) {
+                  video.play().catch(() => {
+                    setPlayingStates(prev => {
+                      const newStates = [...prev];
+                      newStates[index] = false;
+                      return newStates;
+                    });
+                  });
+                }
+              });
+            }
+          }}
+        >
           {videos.map((video, index) => (
             <div 
               key={index} 
-              className={`${isVerticalView ? 'w-full h-[600px] transition-all duration-500' : 'min-w-[600px] h-[337px]'} bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]`}
+              className={`${
+                isVerticalView 
+                  ? 'w-full h-[200px] sm:h-[400px] md:h-[500px] lg:h-[600px] transition-all duration-500' 
+                  : 'min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] cursor-pointer'
+              } relative bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]`}
             >
               <video
-                className="w-full h-full object-cover rounded-[4px]"
+                ref={(el) => {
+                  videoRefs.current[index] = el;
+                }}
+                className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
                 autoPlay={true}
                 loop
                 muted
                 playsInline
+                onPlay={() => {
+                  setPlayingStates(prev => {
+                    const newStates = [...prev];
+                    newStates[index] = true;
+                    return newStates;
+                  });
+                }}
               />
+              {isVerticalView && (
+                <div 
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 hover:opacity-100 transition-opacity duration-200"
+                  onClick={(e) => e.stopPropagation()} // Prevent collapse when clicking controls
+                >
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => togglePlay(index)}
+                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-2 border-white bg-black/30 text-white hover:bg-white hover:text-black transition-colors"
+                  >
+                    {playingStates[index] ? (
+                      <Pause className="h-7 w-7 sm:h-10 sm:w-10 fill-current" />
+                    ) : (
+                      <Play className="h-7 w-7 sm:h-10 sm:w-10 fill-current" />
+                    )}
+                    <span className="sr-only">{playingStates[index] ? "Pause" : "Play"} video</span>
+                  </Button>
+                  <div className="flex gap-4">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => rewindTenSeconds(index)}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white bg-black/30 text-white hover:bg-white hover:text-black transition-colors"
+                    >
+                      <RotateCcw className="h-5 w-5 sm:h-6 sm:w-6" />
+                      <span className="sr-only">Rewind 10 seconds</span>
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => restartVideo(index)}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white bg-black/30 text-white hover:bg-white hover:text-black transition-colors"
+                    >
+                      <RefreshCw className="h-5 w-5 sm:h-6 sm:w-6" />
+                      <span className="sr-only">Restart video</span>
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           {/* Duplicate videos for seamless loop - only show in horizontal mode */}
           {!isVerticalView && videos.slice(0, 2).map((video, index) => (
             <div 
               key={`duplicate-${index}`} 
-              className="min-w-[600px] h-[337px] bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
+              className="min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
             >
               <video
-                className="w-full h-full object-cover rounded-[4px]"
+                className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
                 autoPlay={true}

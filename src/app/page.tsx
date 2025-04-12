@@ -19,9 +19,9 @@ export default function Home() {
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
       <BackgroundSlider />
 
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex flex-col text-2xl font-light tracking-wider">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 bg-black">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <Link href="/" className="flex flex-col text-xl sm:text-2xl font-light tracking-wider">
             <span>JUSTIN FOOTE</span>
             <span>TECHNICAL VFX ARTIST</span>
           </Link>
@@ -67,8 +67,8 @@ export default function Home() {
 
       <PDFModal isOpen={isPDFModalOpen} onClose={() => setIsPDFModalOpen(false)} />
 
-      <main className="pt-[calc(25vh+250px)] pb-16 relative z-10">
-        <section id="reels" className="container mx-auto px-4 md:px-6">
+      <main className="pt-[calc(20vh+200px)] sm:pt-[calc(25vh+250px)] pb-16 relative z-10">
+        <section id="reels" className="container mx-auto px-4 md:px-6 max-w-7xl">
           {/* Featured Reel */}
           <div className="mb-12">
             <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST WORK</h2>
@@ -87,8 +87,25 @@ export default function Home() {
           {/* About Section */}
           <section id="about" className="mb-16">
             <h2 className="text-2xl font-light mb-8 tracking-wide">ABOUT</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="lg:sticky lg:top-24">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+              <div className="space-y-4 sm:space-y-6 order-2 lg:order-1">
+                <p className="text-base sm:text-lg leading-relaxed">
+                  I&apos;m a Visual Effects Artist with 21 years of experience in the video game industry, passionate about creating immersive VFX and I&apos;ve been fortunate to have contributed to a wide range of high-profile projects alongside some of the industry&apos;s most talented teams.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed">
+                  I began my career at Amaze Entertainment, working on Call of Duty: Roads to Victory for PSP, followed by Shrek the Third and Where the Wild Things Are for the XBox. I then joined BioWare Austin to work on Star Wars: The Old Republic, contributing to multiple areas including VFX, sky scenes, and microtransaction asset creation. I later supported titles like Dragon Age: Inquisition (IGN&apos;s 2014 Game of the Year), its DLC The Descent, and Mass Effect: Andromeda.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed">
+                 Seeking new challenges, I joined Microsoft to develop for the cutting-edge HoloLens platform, gaining hands-on experience with AR technologies and utilizing more technical skills like shader creation and Houdini workflows. I later joined Bungie, achieving a major career milestone, working on Destiny 2 and the DLC Curse of Osiris before receiving a unique opportunity to join State Street R&D as VP of AR/VR Technologies. There, I was part of a world-class research team exploring advanced AR/VR cloud infrastructure tools, server farm monitoring tools, and machine learning visualization tools.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed">
+                 My next adventure, I received an opportunity to work at Dimensional Inc. (formerly Daybreak), where I helped kick off development on a Marvel MMO alongside the team behind DC Universe Online, supporting both projects during my time there. Following that, I became the Lead VFX Artist at Big Time, an ambitious new studio where we are creating visually striking, multiplayer-driven experiences.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed">
+                  I&apos;m driven by curiosity, innovation, and a love for creating impactful visual experiences.
+                </p>
+              </div>
+              <div className="lg:sticky lg:top-32 order-1 lg:order-2">
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     src="/images/profile_pic.jpg"
@@ -100,27 +117,13 @@ export default function Home() {
                   />
                 </div>
               </div>
-              <div className="space-y-6">
-                <p className="text-lg leading-relaxed">
-                  I&apos;m a Visual Effects Artist with 21 years of experience in the video game industry, passionate about creating immersive VFX and I&apos;ve been fortunate to have contributed to a wide range of high-profile projects alongside some of the industry&apos;s most talented teams.
-                </p>
-                <p className="text-lg leading-relaxed">
-                  I began my career at Amaze Entertainment, working on Call of Duty: Roads to Victory for PSP, followed by Shrek the Third and Where the Wild Things Are for the XBox. I then joined BioWare Austin to work on Star Wars: The Old Republic, contributing to multiple areas including VFX, sky scenes, and microtransaction asset creation. I later supported titles like Dragon Age: Inquisition (IGN&apos;s 2014 Game of the Year), its DLC The Descent, and Mass Effect: Andromeda.
-                </p>
-                <p className="text-lg leading-relaxed">
-                  Seeking new challenges, I joined Microsoft to develop for the cutting-edge HoloLens platform, gaining hands-on experience with AR technologies. I later joined Bungie, achieving a major career milestone, working on Destiny 2 and the DLC Curse of Osiris before transitioning to State Street as VP of AR/VR Technologies. There, I was part of a world-class research team exploring advanced AR/VR, cloud infrastructure, and machine learning.
-                </p>
-                <p className="text-lg leading-relaxed">
-                  I&apos;m driven by curiosity, innovation, and a love for creating impactful visual experiences.
-                </p>
-              </div>
             </div>
           </section>
 
           {/* Contact Section */}
           <section id="contact" className="text-center">
-            <h2 className="text-2xl font-light mb-6 tracking-wide">CONTACT</h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-light mb-6 tracking-wide">CONTACT</h2>
+            <p className="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
               Interested in collaboration? Let&apos;s create something amazing together.
             </p>
             <div className="flex flex-col md:flex-row justify-center items-center gap-8">

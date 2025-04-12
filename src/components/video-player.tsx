@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
 import Image from "next/image"
 
@@ -13,17 +13,36 @@ interface VideoPlayerProps {
 }
 
 export default function VideoPlayer({ title, featured = false, videoSrc }: VideoPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(featured)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const handlePlay = () => setIsPlaying(true)
+    const handlePause = () => setIsPlaying(false)
+
+    video.addEventListener('play', handlePlay)
+    video.addEventListener('pause', handlePause)
+
+    if (featured) {
+      video.play().catch(() => setIsPlaying(false))
+    }
+
+    return () => {
+      video.removeEventListener('play', handlePlay)
+      video.removeEventListener('pause', handlePause)
+    }
+  }, [featured])
 
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        videoRef.current.play()
+        videoRef.current.play().catch(() => setIsPlaying(false))
       }
-      setIsPlaying(!isPlaying)
     }
   }
 
@@ -41,13 +60,13 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
 
   return (
     <div className="relative overflow-hidden rounded-md group">
-      <div className={`bg-zinc-900 relative ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
+      <div className={`bg-zinc-900 relative w-full ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
         {videoSrc ? (
           <>
             <video
               ref={videoRef}
               src={videoSrc}
-              className="w-full h-full object-cover rounded-[4px]"
+              className="absolute inset-0 w-full h-full object-cover rounded-[4px]"
               loop
               muted
               playsInline
@@ -55,7 +74,7 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
             />
           </>
         ) : (
-          <div className="w-full h-full bg-zinc-800" />
+          <div className="absolute inset-0 w-full h-full bg-zinc-800" />
         )}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <Button
