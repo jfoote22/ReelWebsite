@@ -86,18 +86,29 @@ const VideoCarousel = () => {
     const container = containerRef.current;
     const scrollWidth = container.scrollWidth;
     const clientWidth = container.clientWidth;
-    
+    const scrollThreshold = scrollWidth - clientWidth - 10; // Add small threshold for better detection
+
     const scroll = () => {
-      if (container.scrollLeft >= scrollWidth - clientWidth) {
+      if (!container) return;
+      
+      if (container.scrollLeft >= scrollThreshold) {
+        // When we reach the end, quickly reset to start
         container.scrollLeft = 0;
       } else {
-        container.scrollLeft += 0.8;
+        container.scrollLeft += 1; // Smoother scrolling speed
       }
     };
 
-    const intervalId = setInterval(scroll, 16);
+    // Increase frequency for smoother animation
+    const intervalId = setInterval(scroll, 20);
 
-    return () => clearInterval(intervalId);
+    // Cleanup function
+    return () => {
+      clearInterval(intervalId);
+      if (container) {
+        container.scrollLeft = 0; // Reset scroll position on cleanup
+      }
+    };
   }, [isVerticalView, isHovered]);
 
   // Add click outside handler
@@ -215,6 +226,7 @@ const VideoCarousel = () => {
         className={`relative w-full ${isVerticalView ? '' : 'overflow-x-hidden'}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        style={{ WebkitOverflowScrolling: 'touch' }} // Improve mobile scrolling
       >
         <div 
           className={`${isVerticalView ? 'flex flex-col gap-4 sm:gap-8 px-4 sm:px-8' : 'flex gap-2 sm:gap-4 px-4 sm:px-8'}`}
@@ -307,8 +319,8 @@ const VideoCarousel = () => {
               )}
             </div>
           ))}
-          {/* Duplicate videos for seamless loop - only show in horizontal mode */}
-          {!isVerticalView && videos.slice(0, 2).map((video, index) => (
+          {/* Duplicate first few videos for seamless loop */}
+          {!isVerticalView && videos.slice(0, 3).map((video, index) => (
             <div 
               key={`duplicate-${index}`} 
               className="min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
