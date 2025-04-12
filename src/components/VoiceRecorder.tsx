@@ -3,13 +3,11 @@
 import { useState, useRef } from "react"
 import { Mic, Square } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useDeepgram } from "@/lib/contexts/DeepgramContext"
 
 export default function VoiceRecorder() {
   const [isRecording, setIsRecording] = useState(false)
   const [transcription, setTranscription] = useState("")
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const { transcribeAudio } = useDeepgram()
 
   const startRecording = async () => {
     try {
@@ -24,8 +22,8 @@ export default function VoiceRecorder() {
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
-        const transcription = await transcribeAudio(audioBlob)
-        setTranscription(transcription)
+        // For now, we'll just log the audio blob
+        console.log("Audio recording completed:", audioBlob)
       }
 
       mediaRecorder.start()

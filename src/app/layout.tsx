@@ -1,5 +1,4 @@
 import "./globals.css";
-import { DeepgramContextProvider } from "@/lib/contexts/DeepgramContext";
 
 export default function RootLayout({
   children,
@@ -8,9 +7,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <DeepgramContextProvider>{children}</DeepgramContextProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
