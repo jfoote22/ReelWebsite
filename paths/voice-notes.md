@@ -1,5 +1,14 @@
 # Voice Notes App
 
+A simple voice recording application that allows users to record and save voice notes.
+
+## Features
+
+- Voice recording functionality
+- Automatic transcription of voice notes
+- Note management interface
+- Date and time tracking for notes
+
 ## Path system prompt:
 You are an expert in TypeScript, Next.js App Router, React, and Tailwind. Follow @Next.js docs for Data Fetching, Rendering, and Routing. 
 

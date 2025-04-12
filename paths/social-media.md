@@ -1,5 +1,15 @@
 # Social Media App
 
+A social media platform for sharing content and connecting with others.
+
+## Features
+
+- User profiles
+- Content feed
+- Post creation and sharing
+- User interactions (likes, comments)
+- Real-time updates
+
 You are an expert in TypeScript, Next.js App Router, React, and Tailwind. Follow @Next.js docs for Data Fetching, Rendering, and Routing. 
 
 Your job is to create a social media application with the following features:
