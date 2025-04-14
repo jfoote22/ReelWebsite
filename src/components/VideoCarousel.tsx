@@ -34,6 +34,10 @@ const VideoCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [thumbnailsGenerated, setThumbnailsGenerated] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [hasMoved, setHasMoved] = useState(false);
 
   useEffect(() => {
     // Function to generate thumbnails
@@ -205,6 +209,90 @@ const VideoCarousel = () => {
     });
   }, [isVerticalView]); // Re-run when view changes
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isVerticalView) return;
+    setIsDragging(true);
+    setHasMoved(false);
+    setStartX(e.pageX - (containerRef.current?.offsetLeft || 0));
+    setScrollLeft(containerRef.current?.scrollLeft || 0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || isVerticalView) return;
+    e.preventDefault();
+    const x = e.pageX - (containerRef.current?.offsetLeft || 0);
+    const walk = (x - startX) * 2;
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = scrollLeft - walk;
+      setHasMoved(true);
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    // Only toggle vertical view if it was a simple click (no movement)
+    if (!hasMoved && !isVerticalView) {
+      e.stopPropagation();
+      setIsVerticalView(true);
+      // Keep videos playing when expanding
+      videoRefs.current.forEach((video, index) => {
+        if (video) {
+          video.play().catch(() => {
+            setPlayingStates(prev => {
+              const newStates = [...prev];
+              newStates[index] = false;
+              return newStates;
+            });
+          });
+        }
+      });
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isVerticalView) return;
+    setIsDragging(true);
+    setHasMoved(false);
+    setStartX(e.touches[0].pageX - (containerRef.current?.offsetLeft || 0));
+    setScrollLeft(containerRef.current?.scrollLeft || 0);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || isVerticalView) return;
+    e.preventDefault();
+    const x = e.touches[0].pageX - (containerRef.current?.offsetLeft || 0);
+    const walk = (x - startX) * 2;
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = scrollLeft - walk;
+      setHasMoved(true);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    // Only toggle vertical view if it was a simple tap (no movement)
+    if (!hasMoved && !isVerticalView) {
+      e.stopPropagation();
+      setIsVerticalView(true);
+      // Keep videos playing when expanding
+      videoRefs.current.forEach((video, index) => {
+        if (video) {
+          video.play().catch(() => {
+            setPlayingStates(prev => {
+              const newStates = [...prev];
+              newStates[index] = false;
+              return newStates;
+            });
+          });
+        }
+      });
+    }
+  };
+
   return (
     <section 
       className="w-full py-6 sm:py-12"
@@ -214,28 +302,20 @@ const VideoCarousel = () => {
         ref={containerRef}
         className={`relative w-full ${isVerticalView ? '' : 'overflow-x-hidden'}`}
         onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseLeave={(e) => {
+          setIsHovered(false);
+          handleMouseUp(e);
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
       >
         <div 
           className={`${isVerticalView ? 'flex flex-col gap-4 sm:gap-8 px-4 sm:px-8' : 'flex gap-2 sm:gap-4 px-4 sm:px-8'}`}
-          onClick={(e) => {
-            if (!isVerticalView) {
-              e.stopPropagation();
-              setIsVerticalView(true);
-              // Keep videos playing when expanding
-              videoRefs.current.forEach((video, index) => {
-                if (video) {
-                  video.play().catch(() => {
-                    setPlayingStates(prev => {
-                      const newStates = [...prev];
-                      newStates[index] = false;
-                      return newStates;
-                    });
-                  });
-                }
-              });
-            }
-          }}
         >
           {videos.map((video, index) => (
             <div 
