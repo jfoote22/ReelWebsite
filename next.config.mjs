@@ -33,9 +33,6 @@ const nextConfig = {
     });
     return config;
   },
-  output: {
-    publicPath: '/',
-  },
 };
 
 export default nextConfig;

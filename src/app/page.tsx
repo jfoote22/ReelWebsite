@@ -7,7 +7,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import BackgroundSlider from "@/components/background-slider"
-import VideoPlayer from "@/components/video-player"
+import { VideoPlayer } from "@/components/video-player"
 import PDFModal from "@/components/pdf-modal"
 import VideoCarousel from "@/components/VideoCarousel"
 import PDFEmbed from "@/components/pdf-embed"
@@ -73,17 +73,21 @@ export default function Home() {
           <div className="mb-12">
             <h2 className="text-2xl font-light mb-6 tracking-wide">Latest Technical Work</h2>
             <VideoPlayer 
-              title="Tools Combined" 
-              featured={true} 
-              videoSrc="/video_reels/Tools Combined.mp4"
+              src="/video_reels/Tools Combined.mp4"
+              isPlaying={true}
+              onPlayToggle={() => {}}
+              onRewind={() => {}}
+              onRestart={() => {}}
             />
           </div>
           <div className="mb-12">
             <h2 className="text-2xl font-light mb-6 tracking-wide">Latest In-Game Work</h2>
             <VideoPlayer 
-              title="2016 VFX Demo Reel" 
-              featured={true} 
-              videoSrc="/video_reels/JustinFoote_Reel_2016.mp4"
+              src="/video_reels/JustinFoote_Reel_2016.mp4"
+              isPlaying={true}
+              onPlayToggle={() => {}}
+              onRewind={() => {}}
+              onRestart={() => {}}
             />
           </div>
 
