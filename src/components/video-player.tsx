@@ -1,115 +1,116 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
+import { useEffect, useRef, useState } from 'react'
+import { Play, Pause, RotateCcw } from "lucide-react"
 import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 
 interface VideoPlayerProps {
-  title: string
-  featured?: boolean
-  videoSrc?: string
+  src: string
+  thumbnail?: string
+  isPlaying: boolean
+  onPlayToggle: () => void
+  onRewind: () => void
+  onRestart: () => void
 }
 
-export default function VideoPlayer({ title, featured = false, videoSrc }: VideoPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(featured)
+export function VideoPlayer({ 
+  src, 
+  thumbnail, 
+  isPlaying, 
+  onPlayToggle, 
+  onRewind, 
+  onRestart 
+}: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    const handlePlay = () => setIsPlaying(true)
-    const handlePause = () => setIsPlaying(false)
-
-    video.addEventListener('play', handlePlay)
-    video.addEventListener('pause', handlePause)
-
-    if (featured) {
-      video.play().catch(() => setIsPlaying(false))
+    const handleCanPlay = () => {
+      setIsLoading(false)
+      setError(null)
     }
+
+    const handleError = () => {
+      setIsLoading(false)
+      setError('Failed to load video. Please try again later.')
+    }
+
+    video.addEventListener('canplay', handleCanPlay)
+    video.addEventListener('error', handleError)
 
     return () => {
-      video.removeEventListener('play', handlePlay)
-      video.removeEventListener('pause', handlePause)
+      video.removeEventListener('canplay', handleCanPlay)
+      video.removeEventListener('error', handleError)
     }
-  }, [featured])
+  }, [])
 
-  const togglePlay = () => {
+  useEffect(() => {
     if (videoRef.current) {
       if (isPlaying) {
-        videoRef.current.pause()
+        videoRef.current.play().catch(err => {
+          console.error('Error playing video:', err)
+          setError('Failed to play video. Please try again later.')
+        })
       } else {
-        videoRef.current.play().catch(() => setIsPlaying(false))
+        videoRef.current.pause()
       }
     }
-  }
-
-  const rewindTenSeconds = () => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
-    }
-  }
-
-  const restartVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0
-    }
-  }
+  }, [isPlaying])
 
   return (
-    <div className="relative overflow-hidden rounded-md group">
-      <div className={`bg-zinc-900 relative w-full ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
-        {videoSrc ? (
-          <>
-            <video
-              ref={videoRef}
-              src={videoSrc}
-              className="absolute inset-0 w-full h-full object-cover rounded-[4px]"
-              loop
-              muted
-              playsInline
-              autoPlay={featured}
-            />
-          </>
-        ) : (
-          <div className="absolute inset-0 w-full h-full bg-zinc-800" />
-        )}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+    <div className="relative w-full h-full">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+          <p className="text-white text-center">{error}</p>
+        </div>
+      )}
+      <video
+        ref={videoRef}
+        src={src}
+        poster={thumbnail}
+        className="w-full h-full object-cover"
+        loop
+        muted
+        playsInline
+        preload="auto"
+      />
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="flex gap-2">
           <Button
+            variant="ghost"
             size="icon"
-            variant="outline"
-            onClick={togglePlay}
-            className={`${featured ? "w-20 h-20" : "w-14 h-14"} rounded-full border-2 border-white bg-black/30 text-white hover:bg-white hover:text-black transition-colors`}
+            onClick={onPlayToggle}
+            className="text-white hover:text-white/80"
           >
-            {isPlaying ? (
-              <Pause className={`${featured ? "h-10 w-10" : "h-7 w-7"} fill-current`} />
-            ) : (
-              <Play className={`${featured ? "h-10 w-10" : "h-7 w-7"} fill-current`} />
-            )}
-            <span className="sr-only">{isPlaying ? "Pause" : "Play"} video</span>
+            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
-          <div className="flex gap-4">
-            <Button
-              size="icon"
-              variant="outline"
-              onClick={rewindTenSeconds}
-              className={`${featured ? "w-12 h-12" : "w-10 h-10"} rounded-full border-2 border-white bg-black/30 text-white hover:bg-white hover:text-black transition-colors`}
-            >
-              <RotateCcw className={`${featured ? "h-6 w-6" : "h-5 w-5"}`} />
-              <span className="sr-only">Rewind 10 seconds</span>
-            </Button>
-            <Button
-              size="icon"
-              variant="outline"
-              onClick={restartVideo}
-              className={`${featured ? "w-12 h-12" : "w-10 h-10"} rounded-full border-2 border-white bg-black/30 text-white hover:bg-white hover:text-black transition-colors`}
-            >
-              <RefreshCw className={`${featured ? "h-6 w-6" : "h-5 w-5"}`} />
-              <span className="sr-only">Restart video</span>
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onRewind}
+            className="text-white hover:text-white/80"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onRestart}
+            className="text-white hover:text-white/80"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>

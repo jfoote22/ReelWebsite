@@ -37,11 +37,11 @@ const defaultVideos: Video[] = [
   },
   {
     src: '/video_reels/Microsoft Hololens Logo Trim.mp4',
-    thumbnail: '' // No thumbnail available yet
+    thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg'
   },
   {
     src: '/video_reels/TornadoTorch.mp4',
-    thumbnail: '' // No thumbnail available yet
+    thumbnail: '/video_reels/thumbnails/tornado-thumb.jpg'
   }
 ];
 
