@@ -4,7 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const videos = [
+interface Video {
+  src: string;
+  thumbnail: string;
+}
+
+interface VideoCarouselProps {
+  title?: string;
+  videos?: Video[];
+}
+
+const defaultVideos: Video[] = [
   {
     src: '/video_reels/vfx-reel--star-wars--the-old-republic.mp4',
     thumbnail: '/video_reels/thumbnails/star-wars-thumb.jpg'
@@ -24,10 +34,18 @@ const videos = [
   {
     src: '/video_reels/MortarShellExplodingInSoftDirt.mp4',
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
+  },
+  {
+    src: '/video_reels/Microsoft_Hololens_Logo_Trim.mp4',
+    thumbnail: '' // No thumbnail available yet
+  },
+  {
+    src: '/video_reels/TornadoTorch.mp4',
+    thumbnail: '' // No thumbnail available yet
   }
 ];
 
-const VideoCarousel = () => {
+const VideoCarousel = ({ title = 'PREVIOUS WORK', videos = defaultVideos }: VideoCarouselProps) => {
   const [isVerticalView, setIsVerticalView] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [playingStates, setPlayingStates] = useState<boolean[]>(new Array(videos.length).fill(true));
@@ -38,6 +56,11 @@ const VideoCarousel = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
+
+  useEffect(() => {
+    setPlayingStates(new Array(videos.length).fill(true));
+    // eslint-disable-next-line
+  }, [videos.length]);
 
   useEffect(() => {
     // Function to generate thumbnails
@@ -297,7 +320,7 @@ const VideoCarousel = () => {
     <section 
       className="w-full py-6 sm:py-12"
     >
-      <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">PREVIOUS WORK</h2>
+      <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-4 sm:mb-6">{title}</h2>
       <div 
         ref={containerRef}
         className={`relative w-full ${isVerticalView ? '' : 'overflow-x-hidden'}`}
