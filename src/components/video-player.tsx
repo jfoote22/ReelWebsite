@@ -75,6 +75,7 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               loop
               muted
               playsInline
+              autoPlay={featured}
             />
           </>
         ) : (
