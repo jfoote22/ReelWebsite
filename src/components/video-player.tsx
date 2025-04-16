@@ -14,25 +14,38 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ title, featured = false, videoSrc }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(featured)
+  const [error, setError] = useState<string | null>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    const handlePlay = () => setIsPlaying(true)
+    const handlePlay = () => {
+      setIsPlaying(true)
+      setError(null)
+    }
     const handlePause = () => setIsPlaying(false)
+    const handleError = () => {
+      setError('Failed to load video. Please try again later.')
+      setIsPlaying(false)
+    }
 
     video.addEventListener('play', handlePlay)
     video.addEventListener('pause', handlePause)
+    video.addEventListener('error', handleError)
 
     if (featured) {
-      video.play().catch(() => setIsPlaying(false))
+      video.play().catch(() => {
+        setError('Failed to play video. Please try again later.')
+        setIsPlaying(false)
+      })
     }
 
     return () => {
       video.removeEventListener('play', handlePlay)
       video.removeEventListener('pause', handlePause)
+      video.removeEventListener('error', handleError)
     }
   }, [featured])
 
@@ -41,7 +54,10 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        videoRef.current.play().catch(() => setIsPlaying(false))
+        videoRef.current.play().catch(() => {
+          setError('Failed to play video. Please try again later.')
+          setIsPlaying(false)
+        })
       }
     }
   }
@@ -71,7 +87,13 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               muted
               playsInline
               autoPlay={featured}
+              preload="auto"
             />
+            {error && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                <p className="text-white text-center">{error}</p>
+              </div>
+            )}
           </>
         ) : (
           <div className="absolute inset-0 w-full h-full bg-zinc-800" />
