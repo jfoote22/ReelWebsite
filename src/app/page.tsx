@@ -73,9 +73,9 @@ export default function Home() {
           <div className="mb-12">
             <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST TECHNICAL VFX WORK</h2>
             <VideoPlayer 
-              title="Tools Combined" 
+              title="2016 VFX Demo Reel" 
               featured={true} 
-              videoSrc="/video_reels/Tools Combined.mp4"
+              videoSrc="/video_reels/JustinFoote_Reel_2016.mp4"
             />
           </div>
 
