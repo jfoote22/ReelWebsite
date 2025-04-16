@@ -76,7 +76,6 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               muted
               playsInline
               autoPlay={featured}
-              preload="auto"
             />
           </>
         ) : (
