@@ -27,7 +27,12 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
     video.addEventListener('pause', handlePause)
 
     if (featured) {
-      video.play().catch(() => setIsPlaying(false))
+      setTimeout(() => {
+        video.play().catch((error) => {
+          console.error('Autoplay failed:', error)
+          setIsPlaying(false)
+        })
+      }, 100)
     }
 
     return () => {
@@ -71,6 +76,7 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               muted
               playsInline
               autoPlay={featured}
+              preload="auto"
             />
           </>
         ) : (
