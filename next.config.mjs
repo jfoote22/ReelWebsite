@@ -32,11 +32,6 @@ const nextConfig = {
     });
     return config;
   },
-  // Add experimental features for better video handling
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['@radix-ui/react-icons'],
-  },
 };
 
 export default nextConfig;

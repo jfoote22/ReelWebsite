@@ -105,7 +105,7 @@ const VideoCarousel = ({ title = 'PREVIOUS WORK', videos = defaultVideos }: Vide
     if (!thumbnailsGenerated) {
       generateThumbnails();
     }
-  }, [thumbnailsGenerated]);
+  }, [thumbnailsGenerated, videos]);
 
   useEffect(() => {
     if (!containerRef.current || isVerticalView || isHovered) return;
