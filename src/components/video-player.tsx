@@ -15,11 +15,17 @@ interface VideoPlayerProps {
 export default function VideoPlayer({ title, featured = false, videoSrc }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(featured)
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
+
+    const handleCanPlay = () => {
+      setIsLoading(false)
+      setError(null)
+    }
 
     const handlePlay = () => {
       setIsPlaying(true)
@@ -29,8 +35,10 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
     const handleError = () => {
       setError('Failed to load video. Please try again later.')
       setIsPlaying(false)
+      setIsLoading(false)
     }
 
+    video.addEventListener('canplay', handleCanPlay)
     video.addEventListener('play', handlePlay)
     video.addEventListener('pause', handlePause)
     video.addEventListener('error', handleError)
@@ -39,10 +47,12 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
       video.play().catch(() => {
         setError('Failed to play video. Please try again later.')
         setIsPlaying(false)
+        setIsLoading(false)
       })
     }
 
     return () => {
+      video.removeEventListener('canplay', handleCanPlay)
       video.removeEventListener('play', handlePlay)
       video.removeEventListener('pause', handlePause)
       video.removeEventListener('error', handleError)
@@ -79,6 +89,11 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
       <div className={`bg-zinc-900 relative w-full ${featured ? "aspect-video" : "aspect-video"} border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite] rounded-md`}>
         {videoSrc ? (
           <>
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              </div>
+            )}
             <video
               ref={videoRef}
               src={videoSrc}
