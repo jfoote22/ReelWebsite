@@ -36,7 +36,7 @@ const defaultVideos: Video[] = [
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
   },
   {
-    src: '/video_reels/Microsoft_Hololens_Logo_Trim.mp4',
+    src: '/video_reels/Microsoft Hololens Logo Trim.mp4',
     thumbnail: '' // No thumbnail available yet
   },
   {

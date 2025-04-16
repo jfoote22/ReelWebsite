@@ -73,9 +73,9 @@ export default function Home() {
           <div className="mb-12">
             <h2 className="text-2xl font-light mb-6 tracking-wide">Latest Technical Work</h2>
             <VideoPlayer 
-              title="TOOLS_COMBINED.mp4" 
+              title="Tools Combined" 
               featured={true} 
-              videoSrc="/video_reels/TOOLS_COMBINED.mp4"
+              videoSrc="/video_reels/Tools Combined.mp4"
             />
           </div>
           <div className="mb-12">
@@ -86,8 +86,12 @@ export default function Home() {
               videoSrc="/video_reels/JustinFoote_Reel_2016.mp4"
             />
           </div>
+
+          {/* Previous Work */}
           <div className="mb-16">
-            <VideoCarousel title="Previous Work" />
+            <VideoCarousel 
+              title="Previous Work"
+            />
           </div>
 
           {/* About Section */}
