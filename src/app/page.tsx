@@ -71,17 +71,7 @@ export default function Home() {
         <section id="reels" className="container mx-auto px-4 md:px-6 max-w-7xl">
           {/* Featured Reel */}
           <div className="mb-12">
-            <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST TECHNICAL VFX WORK</h2>
-            <VideoPlayer 
-              title="2016 VFX Demo Reel" 
-              featured={true} 
-              videoSrc="/video_reels/JustinFoote_Reel_2016.mp4"
-            />
-          </div>
-
-          {/* Duplicated Latest Work Section */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST IN-GAME VFX WORK</h2>
+            <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST WORK</h2>
             <VideoPlayer 
               title="2016 VFX Demo Reel" 
               featured={true} 
