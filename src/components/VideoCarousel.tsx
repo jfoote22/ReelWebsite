@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import Image from "next/image";
+
+// Define the interface for video items
+interface VideoItem {
+  src: string;
+  thumbnail: string;
+  isIframe?: boolean;
+}
 
 // Create a fallback mechanism for file paths
 const getVideoSrc = (primaryPath: string, fallbackPath?: string) => {
@@ -14,9 +20,10 @@ const getVideoSrc = (primaryPath: string, fallbackPath?: string) => {
 
 // Manual fix for Microsoft Hololens video - hard-coded path
 const HOLOLENS_VIDEO_URL = '/video_reels/MicrosoftHololensLogoTrim.mp4';
+// HTML page with direct video embed
+const HOLOLENS_HTML_PAGE = '/hololens-video.html';
 
-// Directly reference both versions of the filename to handle caching issues
-const videos = [
+const videos: VideoItem[] = [
   {
     src: '/video_reels/vfx-reel--star-wars--the-old-republic.mp4',
     thumbnail: '/video_reels/thumbnails/star-wars-thumb.jpg'
@@ -38,8 +45,10 @@ const videos = [
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
   },
   {
-    src: HOLOLENS_VIDEO_URL,  // Use the constant
-    thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg'
+    // Use an HTML file for the problematic video
+    src: '/hololens.html',
+    thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg',
+    isIframe: true
   },
   {
     src: '/video_reels/Tornadotorch.mp4',
@@ -63,6 +72,9 @@ const VideoCarousel = () => {
     // Function to generate thumbnails
     const generateThumbnails = async () => {
       for (const video of videos) {
+        // Skip iframe videos
+        if (video.isIframe) continue;
+        
         const videoElement = document.createElement('video');
         videoElement.src = video.src;
         videoElement.currentTime = 1; // Seek to 1 second
@@ -104,48 +116,28 @@ const VideoCarousel = () => {
     }
   }, [thumbnailsGenerated]);
 
-  // Enhanced autoplay functionality
+  // Autoplay videos on mount
   useEffect(() => {
-    const initiatePlayback = () => {
-      videoRefs.current.forEach((video) => {
-        if (video) {
-          // Make sure video is muted for autoplay to work
-          video.muted = true;
-          
-          try {
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(error => {
-                console.log("Autoplay prevented, attempting again...", error);
-                
-                // Try a different approach
-                setTimeout(() => {
-                  video.play().catch(e => console.log("Second attempt failed:", e));
-                }, 1000);
-              });
-            }
-          } catch (err) {
-            console.error("Error trying to play video:", err);
-          }
-        }
-      });
-    };
-
-    // Try to initiate playback multiple times
-    initiatePlayback();
-    const t1 = setTimeout(initiatePlayback, 1000);
-    const t2 = setTimeout(initiatePlayback, 3000);
-    
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    videoRefs.current.forEach((video) => {
+      if (video) {
+        video.play().catch(err => {
+          console.log("Autoplay error:", err);
+        });
+      }
+    });
   }, []);
 
   // Special handling for Microsoft Hololens video (index 5)
   useEffect(() => {
     // Focus on the Microsoft Hololens video
     const hololensVideoIndex = 5; // Index in the videos array
+    
+    // If we're using the iframe approach, we don't need special handling in the component
+    if (videos[hololensVideoIndex].isIframe) {
+      console.log("Using iframe for Microsoft Hololens video, no special handling needed");
+      return;
+    }
+    
     const hololensVideo = videoRefs.current[hololensVideoIndex];
     
     if (hololensVideo) {
@@ -446,53 +438,34 @@ const VideoCarousel = () => {
                   : 'min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] cursor-pointer'
               } relative bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]`}
             >
-              <video
-                ref={(el) => {
-                  videoRefs.current[index] = el;
-                }}
-                style={{
-                  objectFit: 'cover',
-                }}
-                className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
-                src={video.src}
-                poster={video.thumbnail}
-                autoPlay
-                preload="auto"
-                playsInline
-                muted
-                loop
-                onError={(e) => {
-                  console.error(`Video load error for ${video.src}`, e);
-                  
-                  // Special handling for Microsoft Hololens video
-                  if (video.src.includes('Hololens') || video.src.includes('hololens')) {
-                    console.log("Attempting to fix Microsoft Hololens video...");
-                    // Force reload with correct path
-                    const videoEl = e.currentTarget;
-                    videoEl.src = HOLOLENS_VIDEO_URL;
-                    videoEl.load();
-                    videoEl.play().catch(err => console.log("Retry play failed", err));
-                  }
-                }}
-                onCanPlay={(e) => {
-                  e.currentTarget.play().catch(err => 
-                    console.log("Play attempt on canplay failed:", err)
-                  );
-                }}
-                onLoadedData={(e) => {
-                  e.currentTarget.play().catch(err => 
-                    console.log("Play attempt on loadeddata failed:", err)
-                  );
-                }}
-                onPlay={() => {
-                  setPlayingStates(prev => {
-                    const newStates = [...prev];
-                    newStates[index] = true;
-                    return newStates;
-                  });
-                }}
-              />
-              {isVerticalView && (
+              {video.isIframe ? (
+                <iframe
+                  src={video.src}
+                  className="w-full h-full rounded-[2px] sm:rounded-[4px]"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay"
+                  style={{ objectFit: 'cover' }}
+                />
+              ) : (
+                <video
+                  ref={(el) => {
+                    videoRefs.current[index] = el;
+                  }}
+                  style={{
+                    objectFit: 'cover',
+                  }}
+                  className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
+                  src={video.src}
+                  poster={video.thumbnail}
+                  autoPlay
+                  preload="auto"
+                  playsInline
+                  muted
+                  loop
+                />
+              )}
+              {isVerticalView && !video.isIframe && (
                 <div 
                   className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 hover:opacity-100 transition-opacity duration-200"
                   onClick={(e) => e.stopPropagation()} // Prevent collapse when clicking controls
@@ -540,39 +513,27 @@ const VideoCarousel = () => {
               key={`duplicate-${index}`} 
               className="min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
             >
-              <video
-                className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
-                src={video.src}
-                poster={video.thumbnail}
-                autoPlay
-                preload="auto"
-                playsInline
-                muted
-                loop
-                onError={(e) => {
-                  console.error(`Duplicate video load error for ${video.src}`, e);
-                  
-                  // Special handling for Microsoft Hololens video in duplicates
-                  if (video.src.includes('Hololens') || video.src.includes('hololens')) {
-                    console.log("Attempting to fix Microsoft Hololens duplicate video...");
-                    // Force reload with correct path
-                    const videoEl = e.currentTarget;
-                    videoEl.src = HOLOLENS_VIDEO_URL;
-                    videoEl.load();
-                    videoEl.play().catch(err => console.log("Retry play failed", err));
-                  }
-                }}
-                onCanPlay={(e) => {
-                  e.currentTarget.play().catch(err => 
-                    console.log("Duplicate video play attempt failed:", err)
-                  );
-                }}
-                onLoadedData={(e) => {
-                  e.currentTarget.play().catch(err => 
-                    console.log("Duplicate video loadeddata play failed:", err)
-                  );
-                }}
-              />
+              {video.isIframe ? (
+                <iframe
+                  src={video.src}
+                  className="w-full h-full rounded-[2px] sm:rounded-[4px]"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay"
+                  style={{ objectFit: 'cover' }}
+                />
+              ) : (
+                <video
+                  className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
+                  src={video.src}
+                  poster={video.thumbnail}
+                  autoPlay
+                  preload="auto"
+                  playsInline
+                  muted
+                  loop
+                />
+              )}
             </div>
           ))}
         </div>

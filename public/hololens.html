@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Microsoft Hololens Video</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow: hidden;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <video 
+    src="/static/MicrosoftHololensLogoTrim.mp4" 
+    autoplay 
+    muted 
+    loop 
+    playsinline
+    preload="auto"
+  ></video>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const video = document.querySelector("video");
+      
+      // Force play
+      video.play().catch(function(error) {
+        console.error("Video play error:", error);
+      });
+    });
+  </script>
+</body>
+</html> 
