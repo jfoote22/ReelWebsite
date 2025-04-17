@@ -24,6 +24,14 @@ const videos = [
   {
     src: '/video_reels/MortarShellExplodingInSoftDirt.mp4',
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
+  },
+  {
+    src: '/video_reels/Microsoft Hololens Logo Trim.mp4',
+    thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg'
+  },
+  {
+    src: '/video_reels/Tornadotorch.mp4',
+    thumbnail: '/video_reels/thumbnails/tornadotorch-thumb.jpg'
   }
 ];
 
