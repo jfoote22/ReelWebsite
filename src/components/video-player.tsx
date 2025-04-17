@@ -68,9 +68,9 @@ export default function VideoPlayer({ title, featured = false, videoSrc }: Video
               src={videoSrc}
               className="absolute inset-0 w-full h-full object-cover rounded-[4px]"
               loop
-              muted
+              muted={true}
               playsInline
-              autoPlay={featured}
+              autoPlay={true}
             />
           </>
         ) : (
