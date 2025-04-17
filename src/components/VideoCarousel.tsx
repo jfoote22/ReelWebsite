@@ -26,7 +26,7 @@ const videos = [
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
   },
   {
-    src: '/video_reels/Microsoft Hololens Logo Trim.mp4',
+    src: '/video_reels/MicrosoftHololensLogoTrim.mp4',
     thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg'
   },
   {
@@ -216,6 +216,19 @@ const VideoCarousel = () => {
       };
     });
   }, [isVerticalView]); // Re-run when view changes
+  
+  // Ensure videos autoplay on mount
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      if (video) {
+        video.play().catch(err => {
+          console.log("Autoplay prevented:", err);
+          // Modern browsers often require user interaction before autoplay
+          // We've already set autoPlay={true} on the video element
+        });
+      }
+    });
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (isVerticalView) return;
@@ -338,10 +351,14 @@ const VideoCarousel = () => {
                 ref={(el) => {
                   videoRefs.current[index] = el;
                 }}
+                style={{
+                  objectFit: 'cover',
+                }}
                 className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
                 autoPlay={true}
+                preload="auto"
                 loop
                 muted
                 playsInline
@@ -406,6 +423,7 @@ const VideoCarousel = () => {
                 src={video.src}
                 poster={video.thumbnail}
                 autoPlay={true}
+                preload="auto"
                 loop
                 muted
                 playsInline
