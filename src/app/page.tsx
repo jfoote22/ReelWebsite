@@ -75,7 +75,7 @@ export default function Home() {
             <VideoPlayer 
               title="Tools Combined" 
               featured={true} 
-              videoSrc="/video_reels/Tools Combined.mp4"
+              videoSrc="/video_reels/Tools_Combined.mp4"
             />
           </div>
 
