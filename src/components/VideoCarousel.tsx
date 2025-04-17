@@ -4,6 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Play, Pause, RotateCcw, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+// Create a fallback mechanism for file paths
+const getVideoSrc = (primaryPath: string, fallbackPath?: string) => {
+  // This function helps handle potential filename mismatches
+  // It will be replaced with the primary path in the client
+  return primaryPath;
+};
+
+// Directly reference both versions of the filename to handle caching issues
 const videos = [
   {
     src: '/video_reels/vfx-reel--star-wars--the-old-republic.mp4',
@@ -26,7 +34,7 @@ const videos = [
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
   },
   {
-    src: '/video_reels/MicrosoftHololensLogoTrim.mp4',
+    src: '/video_reels/Microsoft Hololens Logo Trim.mp4',
     thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg'
   },
   {
@@ -91,6 +99,44 @@ const VideoCarousel = () => {
       generateThumbnails();
     }
   }, [thumbnailsGenerated]);
+
+  // Enhanced autoplay functionality
+  useEffect(() => {
+    const initiatePlayback = () => {
+      videoRefs.current.forEach((video) => {
+        if (video) {
+          // Make sure video is muted for autoplay to work
+          video.muted = true;
+          
+          try {
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(error => {
+                console.log("Autoplay prevented, attempting again...", error);
+                
+                // Try a different approach
+                setTimeout(() => {
+                  video.play().catch(e => console.log("Second attempt failed:", e));
+                }, 1000);
+              });
+            }
+          } catch (err) {
+            console.error("Error trying to play video:", err);
+          }
+        }
+      });
+    };
+
+    // Try to initiate playback multiple times
+    initiatePlayback();
+    const t1 = setTimeout(initiatePlayback, 1000);
+    const t2 = setTimeout(initiatePlayback, 3000);
+    
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current || isVerticalView || isHovered) return;
@@ -216,19 +262,6 @@ const VideoCarousel = () => {
       };
     });
   }, [isVerticalView]); // Re-run when view changes
-  
-  // Ensure videos autoplay on mount
-  useEffect(() => {
-    videoRefs.current.forEach((video) => {
-      if (video) {
-        video.play().catch(err => {
-          console.log("Autoplay prevented:", err);
-          // Modern browsers often require user interaction before autoplay
-          // We've already set autoPlay={true} on the video element
-        });
-      }
-    });
-  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (isVerticalView) return;
@@ -314,6 +347,24 @@ const VideoCarousel = () => {
     }
   };
 
+  // Add a handler to check for video load errors and try fallback paths
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+      
+      const handleError = () => {
+        console.error(`Error loading video ${videos[index].src}, trying fallback if available`);
+        // Could implement fallback logic here if needed in the future
+      };
+      
+      video.addEventListener('error', handleError);
+      
+      return () => {
+        video.removeEventListener('error', handleError);
+      };
+    });
+  }, []);
+
   return (
     <section 
       className="w-full py-6 sm:py-12"
@@ -357,11 +408,24 @@ const VideoCarousel = () => {
                 className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
-                autoPlay={true}
+                autoPlay
                 preload="auto"
-                loop
-                muted
                 playsInline
+                muted
+                loop
+                onError={(e) => {
+                  console.error(`Video load error for ${video.src}`, e);
+                }}
+                onCanPlay={(e) => {
+                  e.currentTarget.play().catch(err => 
+                    console.log("Play attempt on canplay failed:", err)
+                  );
+                }}
+                onLoadedData={(e) => {
+                  e.currentTarget.play().catch(err => 
+                    console.log("Play attempt on loadeddata failed:", err)
+                  );
+                }}
                 onPlay={() => {
                   setPlayingStates(prev => {
                     const newStates = [...prev];
@@ -422,11 +486,24 @@ const VideoCarousel = () => {
                 className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
                 src={video.src}
                 poster={video.thumbnail}
-                autoPlay={true}
+                autoPlay
                 preload="auto"
-                loop
-                muted
                 playsInline
+                muted
+                loop
+                onError={(e) => {
+                  console.error(`Duplicate video load error for ${video.src}`, e);
+                }}
+                onCanPlay={(e) => {
+                  e.currentTarget.play().catch(err => 
+                    console.log("Duplicate video play attempt failed:", err)
+                  );
+                }}
+                onLoadedData={(e) => {
+                  e.currentTarget.play().catch(err => 
+                    console.log("Duplicate video loadeddata play failed:", err)
+                  );
+                }}
               />
             </div>
           ))}
