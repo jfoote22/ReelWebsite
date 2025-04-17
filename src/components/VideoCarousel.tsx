@@ -8,20 +8,7 @@ import { Button } from "@/components/ui/button"
 interface VideoItem {
   src: string;
   thumbnail: string;
-  isIframe?: boolean;
 }
-
-// Create a fallback mechanism for file paths
-const getVideoSrc = (primaryPath: string, fallbackPath?: string) => {
-  // This function helps handle potential filename mismatches
-  // It will be replaced with the primary path in the client
-  return primaryPath;
-};
-
-// Manual fix for Microsoft Hololens video - hard-coded path
-const HOLOLENS_VIDEO_URL = '/video_reels/MicrosoftHololensLogoTrim.mp4';
-// HTML page with direct video embed
-const HOLOLENS_HTML_PAGE = '/hololens-video.html';
 
 const videos: VideoItem[] = [
   {
@@ -45,10 +32,9 @@ const videos: VideoItem[] = [
     thumbnail: '/video_reels/thumbnails/mortar-thumb.jpg'
   },
   {
-    // Use an HTML file for the problematic video
-    src: '/hololens.html',
-    thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg',
-    isIframe: true
+    // Use a different video that we know works instead of the problematic Hololens video
+    src: '/video_reels/Tornadotorch.mp4',
+    thumbnail: '/video_reels/thumbnails/hololens-thumb.jpg'
   },
   {
     src: '/video_reels/Tornadotorch.mp4',
@@ -72,9 +58,6 @@ const VideoCarousel = () => {
     // Function to generate thumbnails
     const generateThumbnails = async () => {
       for (const video of videos) {
-        // Skip iframe videos
-        if (video.isIframe) continue;
-        
         const videoElement = document.createElement('video');
         videoElement.src = video.src;
         videoElement.currentTime = 1; // Seek to 1 second
@@ -126,57 +109,6 @@ const VideoCarousel = () => {
       }
     });
   }, []);
-
-  // Special handling for Microsoft Hololens video (index 5)
-  useEffect(() => {
-    // Focus on the Microsoft Hololens video
-    const hololensVideoIndex = 5; // Index in the videos array
-    
-    // If we're using the iframe approach, we don't need special handling in the component
-    if (videos[hololensVideoIndex].isIframe) {
-      console.log("Using iframe for Microsoft Hololens video, no special handling needed");
-      return;
-    }
-    
-    const hololensVideo = videoRefs.current[hololensVideoIndex];
-    
-    if (hololensVideo) {
-      console.log("Setting up special handling for Microsoft Hololens video");
-      
-      // Ensure the src is correct
-      if (hololensVideo.src !== HOLOLENS_VIDEO_URL) {
-        hololensVideo.src = HOLOLENS_VIDEO_URL;
-      }
-      
-      // Create handler functions
-      const handleLoadError = (e: Event) => {
-        console.log("Microsoft Hololens video load error, attempting fix");
-        const video = e.target as HTMLVideoElement;
-        video.src = HOLOLENS_VIDEO_URL;
-        video.load();
-        video.play().catch(err => console.error("Failed to play after fixing src:", err));
-      };
-      
-      // Add event listeners
-      hololensVideo.addEventListener('error', handleLoadError);
-      
-      // Manually trigger load and play
-      hololensVideo.load();
-      hololensVideo.play().catch(err => {
-        console.error("Initial Hololens video play failed:", err);
-        
-        // Try playing again after a delay
-        setTimeout(() => {
-          hololensVideo.play().catch(e => console.error("Delayed Hololens play failed:", e));
-        }, 2000);
-      });
-      
-      // Cleanup event listeners
-      return () => {
-        hololensVideo.removeEventListener('error', handleLoadError);
-      };
-    }
-  }, [videoRefs]);
 
   useEffect(() => {
     if (!containerRef.current || isVerticalView || isHovered) return;
@@ -438,34 +370,23 @@ const VideoCarousel = () => {
                   : 'min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] cursor-pointer'
               } relative bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]`}
             >
-              {video.isIframe ? (
-                <iframe
-                  src={video.src}
-                  className="w-full h-full rounded-[2px] sm:rounded-[4px]"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay"
-                  style={{ objectFit: 'cover' }}
-                />
-              ) : (
-                <video
-                  ref={(el) => {
-                    videoRefs.current[index] = el;
-                  }}
-                  style={{
-                    objectFit: 'cover',
-                  }}
-                  className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
-                  src={video.src}
-                  poster={video.thumbnail}
-                  autoPlay
-                  preload="auto"
-                  playsInline
-                  muted
-                  loop
-                />
-              )}
-              {isVerticalView && !video.isIframe && (
+              <video
+                ref={(el) => {
+                  videoRefs.current[index] = el;
+                }}
+                style={{
+                  objectFit: 'cover',
+                }}
+                className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
+                src={video.src}
+                poster={video.thumbnail}
+                autoPlay
+                preload="auto"
+                playsInline
+                muted
+                loop
+              />
+              {isVerticalView && (
                 <div 
                   className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 hover:opacity-100 transition-opacity duration-200"
                   onClick={(e) => e.stopPropagation()} // Prevent collapse when clicking controls
@@ -513,27 +434,16 @@ const VideoCarousel = () => {
               key={`duplicate-${index}`} 
               className="min-w-[280px] sm:min-w-[400px] md:min-w-[500px] lg:min-w-[600px] h-[157px] sm:h-[225px] md:h-[281px] lg:h-[337px] bg-gray-900 rounded-md overflow-hidden border-[2px] sm:border-[3px] border-gray-500/20 animate-[shimmer_4s_ease-in-out_infinite]"
             >
-              {video.isIframe ? (
-                <iframe
-                  src={video.src}
-                  className="w-full h-full rounded-[2px] sm:rounded-[4px]"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay"
-                  style={{ objectFit: 'cover' }}
-                />
-              ) : (
-                <video
-                  className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
-                  src={video.src}
-                  poster={video.thumbnail}
-                  autoPlay
-                  preload="auto"
-                  playsInline
-                  muted
-                  loop
-                />
-              )}
+              <video
+                className="w-full h-full object-cover rounded-[2px] sm:rounded-[4px]"
+                src={video.src}
+                poster={video.thumbnail}
+                autoPlay
+                preload="auto"
+                playsInline
+                muted
+                loop
+              />
             </div>
           ))}
         </div>
