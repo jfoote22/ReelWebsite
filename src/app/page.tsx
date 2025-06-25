@@ -1,4 +1,5 @@
 "use client"
+// Updated to use Star Wars: The Old Republic video 
 import Link from "next/link"
 import Image from "next/image"
 import { Menu, Mail, Phone, Linkedin } from "lucide-react"
@@ -9,11 +10,15 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import BackgroundSlider from "@/components/background-slider"
 import VideoPlayer from "@/components/video-player"
 import PDFModal from "@/components/pdf-modal"
-import VideoCarousel from "@/components/VideoCarousel"
+import VideoCarousel, { videos, technicalVfxVideos } from "@/components/VideoCarousel"
 import PDFEmbed from "@/components/pdf-embed"
+import YouTubeEmbed from "@/components/youtube-embed"
+import FeaturedVideoPlayer from "@/components/FeaturedVideoPlayer"
 
 export default function Home() {
   const [isPDFModalOpen, setIsPDFModalOpen] = useState(false)
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(0)
+  const [selectedTechnicalVideoIndex, setSelectedTechnicalVideoIndex] = useState(0)
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
@@ -69,29 +74,39 @@ export default function Home() {
 
       <main className="pt-[calc(20vh+200px)] sm:pt-[calc(25vh+250px)] pb-16 relative z-10">
         <section id="reels" className="container mx-auto px-4 md:px-6 max-w-7xl">
-          {/* Featured Reel */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST TECHNICAL VFX WORK</h2>
-            <VideoPlayer 
-              title="Tools Combined" 
-              featured={true} 
-              videoSrc="/video_reels/Tools_Combined.mp4"
-            />
-          </div>
-
-          {/* Previous Work */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-light mb-6 tracking-wide">LATEST IN-GAME VFX WORK</h2>
-            <VideoPlayer 
-              title="2016 VFX Demo Reel" 
-              featured={true} 
-              videoSrc="/video_reels/JustinFoote_Reel_2016.mp4"
-            />
-          </div>
-
-          {/* Older Reels */}
+          {/* Featured Reels */}
           <div className="mb-16">
-            <VideoCarousel />
+            <h2 className="text-2xl font-light mb-8 tracking-wide">FEATURED WORK</h2>
+            
+            <div className="flex flex-col gap-8 mb-12">
+              <div>
+                <h3 className="text-xl font-light mb-4 tracking-wide">TECHNICAL VFX WORK</h3>
+                <FeaturedVideoPlayer 
+                  videos={technicalVfxVideos} 
+                  selectedVideoIndex={selectedTechnicalVideoIndex} 
+                  onSelectVideo={setSelectedTechnicalVideoIndex} 
+                />
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-light mb-4 tracking-wide">IN-GAME VFX WORK</h3>
+                <div className="w-full bg-gray-900 rounded-md overflow-hidden border-[3px] border-gray-500/20 aspect-video">
+                  <YouTubeEmbed 
+                    videoId="Byraswh5Rk8" 
+                    title="Justin Foote In-Game VFX Reel"
+                    autoplay={true}
+                    loop={true}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-light mb-6 tracking-wide">PREVIOUS WORK</h2>
+            <FeaturedVideoPlayer 
+              videos={videos} 
+              selectedVideoIndex={selectedVideoIndex} 
+              onSelectVideo={setSelectedVideoIndex} 
+            />
           </div>
 
           {/* About Section */}
