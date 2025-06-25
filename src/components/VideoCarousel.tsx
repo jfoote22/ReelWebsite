@@ -36,6 +36,14 @@ export const technicalVfxVideos: VideoItem[] = [
     description: 'An advanced cable simulation system that automatically generates realistic power lines and cables that conform to terrain geometry. The tool calculates proper tension, sag, and physics-based behavior while maintaining performance optimization for real-time applications.'
   },
   {
+    src: '/video_reels/foliage-generator.mp4',
+    thumbnail: 'https://img.youtube.com/vi/WXFde915cDo/hqdefault.jpg',
+    type: 'youtube',
+    videoId: 'WXFde915cDo',
+    title: 'Top Surface Foliage Generator',
+    description: 'A Houdini-based procedural system for generating realistic foliage and vegetation on terrain surfaces. This tool automatically distributes grass, plants, and ground cover based on surface properties, slope angles, and environmental factors for natural-looking landscape generation.'
+  },
+  {
     src: '/video_reels/cable-generator.mp4',
     thumbnail: 'https://img.youtube.com/vi/fMpmnO3q7w8/maxresdefault.jpg',
     type: 'youtube',
@@ -52,36 +60,44 @@ export const technicalVfxVideos: VideoItem[] = [
     description: 'A comprehensive cable generation system for creating overhead power lines, suspension cables, and industrial wire networks. Features dynamic length calculation, automatic pole placement, and realistic physics simulation with customizable materials and weathering effects.'
   },
   {
-    src: '/video_reels/tree-generator.mp4',
-    thumbnail: 'https://img.youtube.com/vi/nA7jJctTQgo/maxresdefault.jpg',
-    type: 'youtube',
-    videoId: 'nA7jJctTQgo',
-    title: 'Fountain Simulation',
-    description: 'A complex fluid simulation system showcasing advanced water dynamics for fountain and water feature design. Utilizes Vertex Animation Textures (VAT) for efficient real-time playback while maintaining high-quality fluid behavior and realistic water interaction physics.'
-  },
-  {
     src: '/video_reels/fountain-simulation-vat-FINAL.mp4',
     thumbnail: 'https://img.youtube.com/vi/eyx92HTPlc0/hqdefault.jpg',
     type: 'youtube',
     videoId: 'eyx92HTPlc0',
     title: 'Procedural Vine Generator',
     description: 'A procedural vine and vegetation growth system that creates natural-looking organic structures. The tool simulates realistic growth patterns, branch distribution, and leaf placement while providing artist-friendly controls for shaping and directing growth behavior.'
+  },
+  {
+    src: '/video_reels/pipe-generator.mp4',
+    thumbnail: 'https://img.youtube.com/vi/sLYg3IkzJZM/hqdefault.jpg',
+    type: 'youtube',
+    videoId: 'sLYg3IkzJZM',
+    title: 'Pipe Generator',
+    description: 'Houdini based tool for generating pipes and sprinkler systems along ceilings or for industrial or plumbing situations.'
+  },
+  {
+    src: '/video_reels/tree-generator.mp4',
+    thumbnail: 'https://img.youtube.com/vi/nA7jJctTQgo/maxresdefault.jpg',
+    type: 'youtube',
+    videoId: 'nA7jJctTQgo',
+    title: 'Fountain Simulation',
+    description: 'A complex fluid simulation system showcasing advanced water dynamics for fountain and water feature design. Utilizes Vertex Animation Textures (VAT) for efficient real-time playback while maintaining high-quality fluid behavior and realistic water interaction physics.'
   }
 ];
 
 // In-Game VFX work videos array - two videos for the featured section
 export const inGameVfxVideos: VideoItem[] = [
   {
-    src: '/video_reels/in-game-vfx-reel.mp4',
-    thumbnail: 'https://img.youtube.com/vi/WMf9bfipXwM/maxresdefault.jpg',
-    type: 'youtube',
-    videoId: 'WMf9bfipXwM' // In-Game VFX Reel
-  },
-  {
     src: '/video_reels/in-game-vfx-reel-2.mp4',
-    thumbnail: 'https://img.youtube.com/vi/Byraswh5Rk8/maxresdefault.jpg',
+    thumbnail: 'https://img.youtube.com/vi/Byraswh5Rk8/hqdefault.jpg',
     type: 'youtube',
     videoId: 'Byraswh5Rk8' // Justin Foote In-Game VFX Reel
+  },
+  {
+    src: '/video_reels/in-game-vfx-reel.mp4',
+    thumbnail: 'https://img.youtube.com/vi/4h8lpa2iuso/hqdefault.jpg',
+    type: 'youtube',
+    videoId: '4h8lpa2iuso' // Arma Aura weapon BFX
   }
 ];
 
