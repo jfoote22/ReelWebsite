@@ -16,12 +16,16 @@ interface FeaturedVideoPlayerProps {
   videos: VideoItem[];
   selectedVideoIndex: number;
   onSelectVideo: (index: number) => void;
+  onAutoPlayChange?: (enabled: boolean) => void;
+  descriptionModal?: React.ReactNode;
 }
 
 export default function FeaturedVideoPlayer({ 
   videos, 
   selectedVideoIndex, 
-  onSelectVideo 
+  onSelectVideo,
+  onAutoPlayChange,
+  descriptionModal
 }: FeaturedVideoPlayerProps) {
   const currentVideo = videos[selectedVideoIndex];
   const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
@@ -77,10 +81,16 @@ export default function FeaturedVideoPlayer({
         )}
       </div>
       
+      {descriptionModal}
+      
       <div className="flex justify-between items-center mt-4 mb-4">
         <div className="flex items-center">
           <button 
-            onClick={() => setIsAutoPlayEnabled(!isAutoPlayEnabled)}
+            onClick={() => {
+              const newAutoPlayState = !isAutoPlayEnabled;
+              setIsAutoPlayEnabled(newAutoPlayState);
+              onAutoPlayChange?.(newAutoPlayState);
+            }}
             className={`px-4 py-1.5 rounded-md mr-3 text-sm font-light tracking-wider
               ${isAutoPlayEnabled 
                 ? 'bg-transparent text-white border-[2px] border-gray-400/30' 
